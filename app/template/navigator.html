@@ -1,0 +1,39 @@
+<div id='navbar'>
+    <v-card
+        color="grey lighten-4"
+        flat
+        tile
+    >
+        <div class="navigator">
+            <span>Please enter your name to join the chat</span>
+            <v-spacer></v-spacer>
+            <v-form>
+                
+                <v-text-field 
+                v-model="username"
+                label="Your Name"
+                ></v-text-field>
+            </v-form>
+            <v-btn block>
+                Join Chat
+            </v-btn>
+        </div>
+    </v-card>
+</div>
+
+<script>
+    new Vue({
+        el: '#navbar',
+        data: () => ({
+            username: ''
+        }),
+        vuetify: new Vuetify(),
+        delimiters: ['[[', ']]']
+    })
+</script>
+
+<style>
+    .navigator{
+        padding-top: 30px;
+    }
+</style>

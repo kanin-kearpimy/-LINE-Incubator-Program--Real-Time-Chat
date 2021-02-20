@@ -1,0 +1,130 @@
+{% extends 'layouts/main_layout.html' %}
+
+{% block body %}
+    <div id='app'>
+        <v-app>
+        <v-card
+            color="grey lighten-4"
+            flat
+            tile
+        >
+            <div class="navigator" v-if="!isLogin">
+                <span>Please enter your name to join the chat</span>
+                <v-spacer></v-spacer>
+                <v-form>
+                    <v-text-field 
+                    v-model="username"
+                    label="Your Name"
+                    ></v-text-field>
+                </v-form>
+                <v-btn 
+                    block 
+                    @click.native="login"
+                    >
+                    Join Chat
+                </v-btn>
+            </div>
+            <div class="navigator" v-if="isLogin">
+                <span>Welcome : [[username]]</span>
+            </div>
+        </v-card>
+
+        <v-container v-show="isLogin">
+            <v-row>
+                <v-col>
+                    <div class="chat-area">
+                        <li v-for="(item, index) in chat_history" :key="index">
+                            ([[item.date]]) - [[item.user]] : [[item.message]]
+                        </li>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col
+                    sm="12"
+                    md="10"
+                >
+                    <v-text-field
+                        v-model="message_data.message"
+                    ></v-text-field>
+                </v-col>
+                <v-col
+                    sm="12"
+                    md="2"
+                >
+                    <v-btn 
+                        block
+                        @click="sendMessage"
+                        >
+                        Send
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+        </v-app>
+    </div>
+{% endblock %}
+
+{% block script_vue %}
+<script>
+    window.vueModel = new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            username: '',
+            connection: null,
+            chat_history: [],
+            isLogin: false,
+            message_data: {
+                message: '',
+                date: new Date(),
+                username: ''
+            }
+        }),
+        created: async () => {
+            let history = await axios({
+                method: "GET",
+                url: '/chat/history'
+            })
+            vueModel.chat_history = history.data
+            vueModel.chat_history = history.data
+        },
+        methods: {
+            login () {
+                vueModel.isLogin = true,
+                vueModel.message_data.username = vueModel.username
+            },
+            async sendMessage () {
+                let message = this.message_data
+                let send_message = await axios({
+                    method: "POST",
+                    url: '/chat/message',
+                    data: JSON.stringify(message),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+
+                let history = await axios({
+                    method: "GET",
+                    url: '/chat/history'
+                })
+                vueModel.chat_history = history.data
+                vueModel.chat_history = history.data
+            },
+        },
+        delimiters: ['[[', ']]']
+    })
+</script>
+{% endblock %}
+
+{% block style_vue %}
+
+<style>
+    .chat-area{
+        width: 100%;
+        height: 300px;
+    }
+</style>
+
+{% endblock %}
