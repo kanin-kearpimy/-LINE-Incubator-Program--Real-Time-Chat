@@ -95,13 +95,22 @@
                 vueModel.isLogin = true,
                 vueModel.message_data.username = vueModel.username
             },
-            sendMessage () {
+            async sendMessage () {
                 let send_message = axios({
                     method: "GET",
                     url: '/chat/message',
-                    data: JSON.stringify(message_data)
+                    data: JSON.stringify(message),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 })
-            }
+                let history = await axios({
+                    method: "GET",
+                    url: '/chat/history'
+                })
+                vueModel.chat_history = history.data
+                vueModel.chat_history = history.data
+            },
         },
         delimiters: ['[[', ']]']
     })

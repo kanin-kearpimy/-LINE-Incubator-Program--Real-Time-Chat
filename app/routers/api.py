@@ -34,23 +34,21 @@ if(os.path.isfile('fastapi.db') == False):
 
 connection = engine.connect()
 
-db = SessionLocal()
+database = SessionLocal()
 
 
 @router.get('/chat/message')
-async def websocket_endpoint(request: Request, database):
+async def websocket_endpoint(request: Request):
     req = await request.json()
     message = req['message']
     database.add(Chat(name=message['username'], date=message['date'], message=message['message']))
     database.commit()
-    mes = database.query(Chat).first()
     return {'status': 200, 'message': 'OK', 'e': mes}
 
 @router.get('/chat/history')
 async def websocket_endpoint(request: Request):
-    
-    return [{
-        "date": 'today',
-        "user": "mock",
-        "message": "hello"
-    }]
+    chat_history = database.query(Chat).all()
+    result = []
+    for item in chat_history:
+        result.append(result)
+    return result
