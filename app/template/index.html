@@ -1,0 +1,134 @@
+{% extends 'layouts/main_layout.html' %}
+
+{% block body %}
+    <div id='app'>
+        <v-container>
+            <v-row>
+                <v-col>
+                    <v-app>
+                        <v-form
+                            ref="form"
+                            v-model="valid"
+                        >
+                            <v-text-field
+                                v-model="name"
+                                :rules="nameRules"
+                                label="Name"
+                                required
+                            ></v-text-field>
+
+                            <v-btn
+                                :disabled="!valid"
+                                color="success"
+                                class="mr-4"
+                                @click="submitToDo"
+                            >
+                                Add To Do List
+                            </v-btn>
+                        </v-form>
+                        <v-list-item-group>
+                            <v-list-item v-for="item in lists" blind:key="item.id">
+                                <v-list-item-content>
+                                    <v-list-item-title v-if="!edit.is_edit" >[[item.text]]</v-list-item-title>
+                                    <v-list-item-title v-else>
+                                        <v-text-field 
+                                            v-model="edit.name"
+                                            label="Edit Name"
+                                        ></v-text-field>
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                                <v-list-item-action>
+                                    <v-list-item>
+                                        <v-btn @click="triggerEdit(item)" v-if="!edit.is_edit">Edit</v-btn>
+                                        <v-btn @click="update" v-else>Update</v-btn>
+                                        <v-btn @click="deleteList(item.id)">Delete</v-btn>
+                                    </v-list-item>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-app>
+                </v-col>
+                <v-col></v-col>
+            </v-row>
+        </v-container>
+    </div>
+{% endblock %}
+
+{% block script_vue %}
+<script>
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            valid: true,
+            name: '',
+            edit: {
+                is_edit: false,
+                name: '',
+                id: null,
+            },
+            sheet: false,
+            lists: Array(),
+            nameRules: [
+                v => !!v || 'Name is required',
+            ],
+        }),
+        created() {
+            axios({
+                method: 'POST',
+                url: '/api/add-list',
+                data: JSON.stringify({
+                    test: 'test'
+                })
+            })
+        },
+        methods: {
+            showModal(){
+                console.log(this.sheet)
+            },
+            submitToDo(){
+                this.$refs.form.validate()
+                let id = this.lists.length;
+                let new_list = Object({
+                    id: id++,
+                    text: this.name
+                })
+                this.lists.push(new_list)
+                this.$refs.form.reset()
+            },
+            triggerEdit(item){
+                this.edit.name = item.text
+                this.edit.is_edit = true
+                this.edit.id = item.id
+            },
+            update(){
+                let this_edit = this.edit
+                let new_list = this.lists.map(function(item){
+                    console.log(this_edit)
+                    if(item.id === this_edit.id){
+                        item.text = this_edit.name
+                    }
+                    return item
+                })
+                this.lists = new_list
+                this.clearEdit()
+            },
+            deleteList(id){
+                let new_list = this.lists.filter((item) => {
+                    return item.id !== id
+                })
+
+                this.lists = new_list
+            },
+            clearEdit(){
+                this.edit = {
+                    is_edit: false,
+                    name: '',
+                    id: null,
+                }
+            }
+        },
+        delimiters: ['[[', ']]']
+    })
+</script>
+{% endblock %}
