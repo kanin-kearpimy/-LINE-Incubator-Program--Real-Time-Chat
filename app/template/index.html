@@ -33,10 +33,9 @@
             <v-row>
                 <v-col>
                     <div class="chat-area">
-                        <span v-for="(item, index) in chat_history" :key="index">
+                        <li v-for="(item, index) in chat_history" :key="index">
                             ([[item.date]]) - [[item.user]] : [[item.message]]
-                        </span>
-                        [[username]]
+                        </li>
                     </div>
                 </v-col>
             </v-row>
@@ -98,7 +97,7 @@
             async sendMessage () {
                 let message = this.message_data
                 let send_message = await axios({
-                    method: "GET",
+                    method: "POST",
                     url: '/chat/message',
                     data: JSON.stringify(message),
                     headers: {

@@ -37,18 +37,16 @@ connection = engine.connect()
 database = SessionLocal()
 
 
-@router.get('/chat/message')
+@router.post('/chat/message')
 async def websocket_endpoint(request: Request):
     req = await request.json()
     message = req['message']
-    database.add(Chat(name=message['username'], date=message['date'], message=message['message']))
+    database.add(Chat(name=str(req['username']), date=str(req['date']), message=str(req['message'])))
     database.commit()
-    return {'status': 200, 'message': 'OK', 'e': mes}
+    return {'status': 200, 'message': 'ok'}
 
 @router.get('/chat/history')
 async def websocket_endpoint(request: Request):
     chat_history = database.query(Chat).all()
-    result = []
-    for item in chat_history:
-        result.append(result)
-    return result
+        
+    return chat_history
