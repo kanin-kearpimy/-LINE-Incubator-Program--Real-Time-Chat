@@ -1,8 +1,17 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, WebSocket
 
 router = APIRouter()
 
-@router.post('/api/add-list')
-async def addList(request: Request):
-    all_request = await request.json()
-    return all_request
+@router.get('/chat/message')
+async def websocket_endpoint(request: Request):
+    req = await request.json()
+    message = req['message']
+    return message
+
+@router.get('/chat/history')
+async def websocket_endpoint(request: Request):
+    return [{
+        "date": 'today',
+        "user": "mock",
+        "message": "hello"
+    }]

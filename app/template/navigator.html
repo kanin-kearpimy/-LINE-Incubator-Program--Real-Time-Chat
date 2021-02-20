@@ -4,28 +4,36 @@
         flat
         tile
     >
-        <v-toolbar dense>
-            <v-toolbar-title>Title</v-toolbar-title>
-
+        <div class="navigator">
+            <span>Please enter your name to join the chat</span>
             <v-spacer></v-spacer>
-
-            <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>            
-            <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>            
-            <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
+            <v-form>
+                
+                <v-text-field 
+                v-model="username"
+                label="Your Name"
+                ></v-text-field>
+            </v-form>
+            <v-btn block>
+                Join Chat
             </v-btn>
-        </v-toolbar>
+        </div>
     </v-card>
 </div>
 
 <script>
     new Vue({
         el: '#navbar',
+        data: () => ({
+            username: ''
+        }),
         vuetify: new Vuetify(),
         delimiters: ['[[', ']]']
     })
 </script>
+
+<style>
+    .navigator{
+        padding-top: 30px;
+    }
+</style>
