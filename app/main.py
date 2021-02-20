@@ -7,10 +7,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String
-import sqlalchemy as db
+from sqlalchemy.orm import Session, sessionmaker
+import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 import os
 from app.routers import api, web
+
+
 
 # Basic Application Setup
 app = FastAPI()
@@ -36,3 +39,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
+
+

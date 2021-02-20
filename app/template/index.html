@@ -46,14 +46,17 @@
                     md="10"
                 >
                     <v-text-field
-                        v-model="text"
+                        v-model="message_data.message"
                     ></v-text-field>
                 </v-col>
                 <v-col
                     sm="12"
                     md="2"
                 >
-                    <v-btn block>
+                    <v-btn 
+                        block
+                        @click="sendMessage"
+                        >
                         Send
                     </v-btn>
                 </v-col>
@@ -69,7 +72,6 @@
         el: '#app',
         vuetify: new Vuetify(),
         data: () => ({
-            text: '',
             username: '',
             connection: null,
             chat_history: [],
