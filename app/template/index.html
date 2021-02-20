@@ -96,7 +96,8 @@
                 vueModel.message_data.username = vueModel.username
             },
             async sendMessage () {
-                let send_message = axios({
+                let message = this.message_data
+                let send_message = await axios({
                     method: "GET",
                     url: '/chat/message',
                     data: JSON.stringify(message),
@@ -104,6 +105,7 @@
                         'Content-Type': 'application/json',
                     }
                 })
+
                 let history = await axios({
                     method: "GET",
                     url: '/chat/history'
